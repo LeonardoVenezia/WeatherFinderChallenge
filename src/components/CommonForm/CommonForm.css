@@ -1,0 +1,17 @@
+.CommonForm input[type="submit"] {
+    border: 0;
+    padding: 8px 20px;
+    margin: 0 2px;
+    border-radius: 2px;
+    font-weight: lighter;
+    letter-spacing: 1px;
+    font-size: 15px;
+    cursor: pointer;
+    background-color: #f16051;
+    color: #fff;
+    font-weight: 100;
+}
+
+.CommonForm input[type="submit"]:active {
+    outline: none;
+}
