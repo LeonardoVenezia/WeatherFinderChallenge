@@ -4,8 +4,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
 import WeatherInfo from "./components/WeatherInfo";
 import { useState } from "react";
-
-const { REACT_APP_OPENWEATHERMAP_API_KEY } = process.env;
+import { getWeather } from "./services/weatherServices";
 
 const App = ()=> {
   const [apiData, setApiData] = useState(
@@ -18,30 +17,17 @@ const App = ()=> {
       error: null,
     }
   );
-  const getWeather = async (e) => {
+  const submitForm = async (e) => {
     e.preventDefault();
-    const city = e.target.elements.city.value || "Madrid";
-    const country = e.target.elements.country.value || "es";
-    const api_call = await fetch(
-      `http://api.openweathermap.org/data/2.5/weather?q=${city},${country}&appid=${REACT_APP_OPENWEATHERMAP_API_KEY}&units=metric`
-    );
-    const data = await api_call.json();
+    const city = e.target.elements.city.value;
+    const country = e.target.elements.country.value;
+
     if (city && country) {
-      setApiData({
-        temperature: data.main.temp,
-        city: data.name,
-        country: data.sys.country,
-        humidity: data.main.humidity,
-        description: data.weather[0].description,
-        error: "",
-      });
+      const data = await getWeather(city, country);
+      setApiData(data);
     } else {
       setApiData({
-        temperature: undefined,
-        city: undefined,
-        country: undefined,
-        humidity: undefined,
-        description: undefined,
+        data: [],
         error: "Please enter the values.",
       });
     }
@@ -61,60 +47,14 @@ const App = ()=> {
                   </div>
                 </div>
                 <div className="col-7 form-container">
-                  <form onSubmit={getWeather}>
+                  <form onSubmit={submitForm}>
                     <input type="text" name="city" placeholder="Madrid" />
                     <input type="text" name="country" placeholder="es" />
                     <button>Get Weather</button>
                   </form>
-                   {/* <WeatherInfo
-                    city={apiData.city}
-                    country={apiData.country}
-                   /> */}
-                  <div className="weather__info">
-                    {apiData.city && apiData.country && (
-                      <p className="weather__key">
-                        {" "}
-                        Location:
-                        <span className="weather__value">
-                          {" "}
-                          {apiData.city}, {apiData.country}
-                        </span>
-                      </p>
-                    )}
-                    {apiData.temperature && (
-                      <p className="weather__key">
-                        {" "}
-                        Temperature:
-                        <span className="weather__value">
-                          {" "}
-                          {apiData.temperature}{" "}
-                        </span>
-                      </p>
-                    )}
-                    {apiData.humidity && (
-                      <p className="weather__key">
-                        {" "}
-                        Humidity:
-                        <span className="weather__value">
-                          {" "}
-                          {apiData.humidity}{" "}
-                        </span>
-                      </p>
-                    )}
-                    {apiData.description && (
-                      <p className="weather__key">
-                        {" "}
-                        Conditions:
-                        <span className="weather__value">
-                          {" "}
-                          {apiData.description}{" "}
-                        </span>
-                      </p>
-                    )}
-                    {apiData.error && (
-                      <p className="weather__error">{apiData.error}</p>
-                    )}
-                  </div>
+                   <WeatherInfo
+                    data={apiData.data}
+                   />
                 </div>
               </div>
             </div>
