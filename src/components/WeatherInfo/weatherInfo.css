@@ -1,0 +1,22 @@
+.weatherInfo {
+    width: 60%;
+    font-size: 20px;
+    font-weight: 200;
+    letter-spacing: 2px;
+}
+
+.weatherInfo__key {
+    color: #f16051;
+    border-bottom: solid 2px rgba(255, 255, 255, 0.06);
+    padding: 20px 0 20px 0;
+    font-weight: 400;
+}
+
+.weatherInfo__key:last-child {
+    border: 0;
+}
+
+.weatherInfo__value {
+    color: #fff;
+    font-weight: 200;
+}

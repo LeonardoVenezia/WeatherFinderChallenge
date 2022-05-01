@@ -2,19 +2,23 @@ import React from "react";
 import ReactDOM from "react-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
+import WeatherInfo from "./components/WeatherInfo";
+import { useState } from "react";
 
 const { REACT_APP_OPENWEATHERMAP_API_KEY } = process.env;
 
-class App extends React.Component {
-  state = {
-    temperature: undefined,
-    city: undefined,
-    country: undefined,
-    humidity: undefined,
-    description: undefined,
-    error: undefined,
-  };
-  getWeather = async (e) => {
+const App = ()=> {
+  const [apiData, setApiData] = useState(
+    {
+      temperature: null,
+      city: null,
+      country: null,
+      humidity: null,
+      description: null,
+      error: null,
+    }
+  );
+  const getWeather = async (e) => {
     e.preventDefault();
     const city = e.target.elements.city.value || "Madrid";
     const country = e.target.elements.country.value || "es";
@@ -23,7 +27,7 @@ class App extends React.Component {
     );
     const data = await api_call.json();
     if (city && country) {
-      this.setState({
+      setApiData({
         temperature: data.main.temp,
         city: data.name,
         country: data.sys.country,
@@ -32,7 +36,7 @@ class App extends React.Component {
         error: "",
       });
     } else {
-      this.setState({
+      setApiData({
         temperature: undefined,
         city: undefined,
         country: undefined,
@@ -42,7 +46,6 @@ class App extends React.Component {
       });
     }
   };
-  render() {
     return (
       <div>
         <div className="wrapper">
@@ -58,54 +61,58 @@ class App extends React.Component {
                   </div>
                 </div>
                 <div className="col-7 form-container">
-                  <form onSubmit={this.getWeather}>
+                  <form onSubmit={getWeather}>
                     <input type="text" name="city" placeholder="Madrid" />
                     <input type="text" name="country" placeholder="es" />
                     <button>Get Weather</button>
                   </form>
+                   {/* <WeatherInfo
+                    city={apiData.city}
+                    country={apiData.country}
+                   /> */}
                   <div className="weather__info">
-                    {this.state.city && this.state.country && (
+                    {apiData.city && apiData.country && (
                       <p className="weather__key">
                         {" "}
                         Location:
                         <span className="weather__value">
                           {" "}
-                          {this.state.city}, {this.state.country}
+                          {apiData.city}, {apiData.country}
                         </span>
                       </p>
                     )}
-                    {this.state.temperature && (
+                    {apiData.temperature && (
                       <p className="weather__key">
                         {" "}
                         Temperature:
                         <span className="weather__value">
                           {" "}
-                          {this.state.temperature}{" "}
+                          {apiData.temperature}{" "}
                         </span>
                       </p>
                     )}
-                    {this.state.humidity && (
+                    {apiData.humidity && (
                       <p className="weather__key">
                         {" "}
                         Humidity:
                         <span className="weather__value">
                           {" "}
-                          {this.state.humidity}{" "}
+                          {apiData.humidity}{" "}
                         </span>
                       </p>
                     )}
-                    {this.state.description && (
+                    {apiData.description && (
                       <p className="weather__key">
                         {" "}
                         Conditions:
                         <span className="weather__value">
                           {" "}
-                          {this.state.description}{" "}
+                          {apiData.description}{" "}
                         </span>
                       </p>
                     )}
-                    {this.state.error && (
-                      <p className="weather__error">{this.state.error}</p>
+                    {apiData.error && (
+                      <p className="weather__error">{apiData.error}</p>
                     )}
                   </div>
                 </div>
@@ -116,6 +123,5 @@ class App extends React.Component {
       </div>
     );
   }
-}
 
 ReactDOM.render(<App />, document.getElementById("root"));
