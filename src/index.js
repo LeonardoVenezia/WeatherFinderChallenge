@@ -9,12 +9,11 @@ import CommonHeader from "./components/CommonHeader";
 import CommonForm from "./components/CommonForm";
 
 const App = ()=> {
-  const [apiData, setApiData] = useState(
-    {
-      data: [],
-      error: null,
-    }
-  );
+  const [apiData, setApiData] = useState({
+    data: [],
+    error: null,
+  });
+
   const inputs = [
     {
       type: "text",
@@ -31,21 +30,16 @@ const App = ()=> {
       name: "submit",
       value: "Get Weather"
     },
-  ]
+  ];
+
   const submitForm = async (e) => {
     e.preventDefault();
     const city = e.target.elements.city.value;
     const country = e.target.elements.country.value;
 
-    if (city && country) {
-      const data = await getWeather(city, country);
-      setApiData(data);
-    } else {
-      setApiData({
-        data: [],
-        error: "Please enter the values.",
-      });
-    }
+    const data = await getWeather(city, country);
+    setApiData(data);
+
   };
     return (
       <div>
@@ -62,9 +56,12 @@ const App = ()=> {
                     submitForm={submitForm}
                     inputs={inputs}
                   />
-                   <WeatherInfo
+                  <WeatherInfo
                     data={apiData.data}
-                   />
+                  />
+                  {apiData.error && (
+                    <p className="weather__error">{apiData.error}</p>
+                  )}
                 </div>
               </div>
             </div>

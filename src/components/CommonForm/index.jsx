@@ -7,12 +7,11 @@ const CommonForm = ({ submitForm, inputs }) => {
             {inputs.map(input => {
                 return (
                     <input
+                        key={input.name || input.placeholder || input.value}
                         {...input}
-
                     />
                 )
             })}
-            {/* <button>Get Weather</button> */}
         </form>
     )
 }
